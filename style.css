@@ -5,35 +5,34 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: 1000px;
+  margin: 0; /* Added to remove default margin */
+  overflow: hidden; /* Prevent scrollbars */
+  background-size: cover; /* Changed to cover for better responsiveness */
   background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
   background-position: center center;
 }
 
 .paper {
   background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
-  background-size: 500px;
+  background-size: cover; /* Make background cover the paper */
   background-position: center center;
-  padding: 20px 10px;
+  padding: 20px;
+  width: 90%; /* Make paper width responsive */
+  max-width: 400px; /* Max width for larger screens */
   transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
   position: absolute;
+  transition: transform 0.1s; /* Smooth transition for transformations */
 }
 
 .paper.heart {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  padding: 0;
+  width: 160px; /* Reduced size for better responsiveness */
+  height: 160px;
   border-radius: 50%;
 }
 
 .paper.image {
   padding: 10px;
-}
-
-.paper.image p {
-  font-size: 30px;
 }
 
 img {
@@ -58,17 +57,23 @@ img {
 
 p {
   font-family: 'Zeyada';
-  font-size: 50px;
+  font-size: 24px; /* Smaller font size for better responsiveness */
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
   filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9));
 }
 
+/* Responsive design for mobile */
 @media (max-width: 600px) {
   .paper {
     width: 90%;
     padding: 10px;
-    font-size: 20px; /* Adjust font size for mobile */
+    font-size: 16px; /* Adjust font size for smaller screens */
+  }
+
+  .paper.heart {
+    width: 120px; /* Smaller heart size for mobile */
+    height: 120px;
   }
 }

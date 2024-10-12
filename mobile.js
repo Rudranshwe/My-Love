@@ -2,29 +2,34 @@ let highestZ = 1;
 
 class Paper {
   holdingPaper = false;
-  touchStartX = 0;
-  touchStartY = 0;
+  mouseTouchX = 0;
+  mouseTouchY = 0;
   mouseX = 0;
   mouseY = 0;
   prevMouseX = 0;
   prevMouseY = 0;
+  velX = 0;
+  velY = 0;
   rotation = Math.random() * 30 - 15;
   currentPaperX = 0;
   currentPaperY = 0;
   rotating = false;
 
   init(paper) {
-    // Mouse move events
     document.addEventListener('mousemove', (e) => {
-      if (this.holdingPaper && !this.rotating) {
+      if (!this.rotating) {
         this.mouseX = e.clientX;
         this.mouseY = e.clientY;
-        const velX = this.mouseX - this.prevMouseX;
-        const velY = this.mouseY - this.prevMouseY;
 
-        this.currentPaperX += velX;
-        this.currentPaperY += velY;
-        
+        this.velX = this.mouseX - this.prevMouseX;
+        this.velY = this.mouseY - this.prevMouseY;
+      }
+
+      if (this.holdingPaper) {
+        if (!this.rotating) {
+          this.currentPaperX += this.velX;
+          this.currentPaperY += this.velY;
+        }
         this.prevMouseX = this.mouseX;
         this.prevMouseY = this.mouseY;
 
@@ -35,10 +40,14 @@ class Paper {
     paper.addEventListener('mousedown', (e) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
-      
-      paper.style.zIndex = highestZ++;
-      this.prevMouseX = e.clientX;
-      this.prevMouseY = e.clientY;
+
+      paper.style.zIndex = highestZ;
+      highestZ += 1;
+
+      this.mouseTouchX = this.mouseX;
+      this.mouseTouchY = this.mouseY;
+      this.prevMouseX = this.mouseX;
+      this.prevMouseY = this.mouseY;
 
       if (e.button === 2) {
         this.rotating = true;
@@ -50,35 +59,36 @@ class Paper {
       this.rotating = false;
     });
 
-    // Touch events
+    // Touch event listeners for mobile devices
     paper.addEventListener('touchstart', (e) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
-      
-      paper.style.zIndex = highestZ++;
-      this.touchStartX = e.touches[0].clientX;
-      this.touchStartY = e.touches[0].clientY;
 
-      if (e.touches.length > 1) {
-        this.rotating = true; // Rotate if using two fingers
-      }
+      paper.style.zIndex = highestZ;
+      highestZ += 1;
+
+      this.mouseTouchX = e.touches[0].clientX;
+      this.mouseTouchY = e.touches[0].clientY;
+      this.prevMouseX = this.mouseTouchX;
+      this.prevMouseY = this.mouseTouchY;
     });
 
-    document.addEventListener('touchmove', (e) => {
-      if (this.holdingPaper && !this.rotating) {
+    paper.addEventListener('touchmove', (e) => {
+      e.preventDefault(); // Prevent default scrolling
+      if (this.holdingPaper) {
         this.mouseX = e.touches[0].clientX;
         this.mouseY = e.touches[0].clientY;
 
-        const velX = this.mouseX - this.touchStartX;
-        const velY = this.mouseY - this.touchStartY;
+        this.velX = this.mouseX - this.prevMouseX;
+        this.velY = this.mouseY - this.prevMouseY;
 
-        this.currentPaperX += velX;
-        this.currentPaperY += velY;
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
 
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
-        
-        this.touchStartX = this.mouseX;
-        this.touchStartY = this.mouseY;
+
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
       }
     });
 
