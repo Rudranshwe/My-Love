@@ -26,6 +26,7 @@ class Paper {
       }
 
       if (this.holdingPaper) {
+        e.preventDefault(); // Prevent default action (like text selection)
         if (!this.rotating) {
           this.currentPaperX += this.velX;
           this.currentPaperY += this.velY;
@@ -64,6 +65,7 @@ class Paper {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
+      e.preventDefault(); // Prevent default action
       paper.style.zIndex = highestZ;
       highestZ += 1;
 
